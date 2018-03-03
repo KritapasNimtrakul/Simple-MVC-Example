@@ -147,8 +147,8 @@ const hostPage3 = (req, res) => {
     // in the app.js as jade. Calling res.render('index')
     // actually calls index.jade. A second parameter of JSON can be passed
     // into the jade to be used as variables with #{varName}
-    
-    const callback = (err, docs) => {
+
+  const callback = (err, docs) => {
     if (err) {
       return res.json({ err }); // if error, return it
     }
@@ -229,7 +229,7 @@ const setName = (req, res) => {
   });
 
   // if error, return it
-  savePromise.catch((err) => res.json({ err }));
+  savePromise.catch(err => res.json({ err }));
 
   return res;
 };
@@ -269,11 +269,10 @@ const setDogName = (req, res) => {
   });
 
   // if error, return it
-  savePromise.catch((err) => res.json({ err }));
+  savePromise.catch(err => res.json({ err }));
 
   return res;
 };
-
 
 
 // function to handle requests search for a name and return the object
@@ -345,7 +344,6 @@ const searchDogName = (req, res) => {
     if (!doc) {
       return res.json({ error: 'No dogs found' });
     }
-      doc.age = req.body.age;
 
     // if a match, send the match back
     return res.json({ name: doc.name, breed: doc.breed, age: doc.age });
@@ -375,23 +373,25 @@ const updateLast = (req, res) => {
   savePromise.then(() => res.json({ name: lastAdded.name, beds: lastAdded.bedsOwned }));
 
   // if save error, just return an error for now
-  savePromise.catch((err) => res.json({ err }));
+  savePromise.catch(err => res.json({ err }));
 };
 const updateDogLast = (req, res) => {
-
   // once you change all the object properties you want,
   // then just call the Model object's save function
   // create a new save promise for the database
-    
-  searchDogName(req,res);
-    
+
+  const dogTemp = searchDogName(req, res);
+  dogTemp.age = req.body.age;
+
   const savePromise = lastDogAdded.save();
 
   // send back the name as a success for now
-  savePromise.then(() => res.json({ name: lastDogAdded.name, breed: lastDogAdded.breed, age: lastDogAdded.age }));
+  savePromise.then(() => res.json({ name: lastDogAdded.name,
+    breed: lastDogAdded.breed,
+    age: lastDogAdded.age }));
 
   // if save error, just return an error for now
-  savePromise.catch((err) => res.json({ err }));
+  savePromise.catch(err => res.json({ err }));
 };
 
 // function to handle a request to any non-real resources (404)
